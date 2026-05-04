@@ -37,7 +37,9 @@
 .pet-canvas{
   position:relative;
   width:180px;height:180px;
-  /* Sutil flotación */
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  cursor: pointer;
   animation:pet-float 3s ease-in-out infinite;
 }
 
