@@ -220,6 +220,8 @@ function renderPetPage(petData) {
 
   // Aplicar accesorios activos al canvas
   applyAccessoriesToCanvas(activeAccs, petData.xp || 0, stage)
+
+  initPetClick()
 }
 
 function renderEvolutionPath(xp) {
@@ -409,6 +411,46 @@ function renderPetMini(petData) {
 }
 
 // ─────────────────────────────────────────
+// INTERACCIONES AL CLICK
+// ─────────────────────────────────────────
+const CLICK_ANIMS = ['anim-shake', 'anim-jump', 'anim-spin', 'anim-squish']
+let lastAnim = ''
+
+function initPetClick() {
+  const canvas = el('pet-canvas')
+  if (!canvas) return
+  canvas.style.cursor = 'pointer'
+  canvas.addEventListener('click', () => {
+    // Elige una animación distinta a la anterior
+    let opts = CLICK_ANIMS.filter(a => a !== lastAnim)
+    let anim = opts[Math.floor(Math.random() * opts.length)]
+    lastAnim = anim
+
+    // Quita animaciones previas y aplica la nueva
+    CLICK_ANIMS.forEach(a => canvas.classList.remove(a))
+    void canvas.offsetWidth // fuerza reflow para reiniciar
+    canvas.classList.add(anim)
+
+    // Cambia el speech también
+    const stage = getStageByXP(
+      parseInt(el('ps-xp')?.textContent) || 0
+    )
+    const speech = el('pet-speech')
+    if (speech) {
+      speech.textContent = randomSpeech(stage)
+      speech.style.animation = 'none'
+      void speech.offsetWidth
+      speech.style.animation = 'fadeUp .3s ease'
+    }
+
+    // Limpia la clase al terminar para que el float vuelva
+    canvas.addEventListener('animationend', () => {
+      canvas.classList.remove(anim)
+    }, { once: true })
+  })
+}
+
+// ─────────────────────────────────────────
 // HELPERS
 // ─────────────────────────────────────────
 function el(id) { return document.getElementById(id) }
@@ -418,5 +460,5 @@ window.PetSystem = {
   PET_STAGES, ACCESSORIES,
   getStageByXP, calcXPGain, xpProgressPct, randomSpeech,
   renderPetPage, renderPetMini, clearAccessories,
-  applyAccessoriesToCanvas,
+  applyAccessoriesToCanvas, initPetClick,
 }

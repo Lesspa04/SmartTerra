@@ -41,9 +41,9 @@
   padding:8px 10px;background:var(--green-dim);
   border-radius:var(--r-md);border:1px solid var(--border-md);
   font-size:.82rem;color:var(--green);font-weight:600;
-  font-family:var(--ff-head);min-height:40px;
+  font-family:var(--ff-head);min-height:60px;
 }
-.sidebar-pet-mini .pet-thumb{width:32px;height:32px;object-fit:contain}
+.sidebar-pet-mini .pet-thumb{width:52px;height:52px;object-fit:contain}
 
 .user-chip{display:flex;align-items:center;gap:9px}
 .user-avatar{

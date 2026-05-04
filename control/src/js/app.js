@@ -4,13 +4,13 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-  // ── SUPABASE & AUTH ────────────────────────────────────── ACTIVAR DESPUES DE AJUSTAR SUPABASE
-  //const { data: { session } } = await db.auth.getSession()
-  //if (!session) { 
-  //  location.href = 'index.html'; 
-  //  return 
-  //}
-  //const user = session.user
+  // ── SUPABASE & AUTH ────────────────────────────────────── 
+    const { data: { session } } = await db.auth.getSession()
+    if (!session) { 
+      location.href = 'index.html'; 
+      return 
+    }
+    const user = session.user
 
   // ── ESTADO GLOBAL ────────────────────────────────────────
   let profile      = null
@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById('nav-avatar').textContent = initial
     document.getElementById('nav-name').textContent   = profile?.full_name || 'Usuario'
     document.getElementById('nav-role').textContent   = profile?.role === 'admin' ? 'Administrador' : 'Usuario'
-    document.getElementById('dash-greeting').innerHTML = `Hola, ${(profile?.full_name || 'Usuario').split(' ')[0]} 👋`
+    document.getElementById('dash-greeting').innerHTML = `Hola, ${(profile?.full_name || 'Usuario').split(' ')[0]} :>`
 
     // Admin
     if (profile?.role === 'admin') {
