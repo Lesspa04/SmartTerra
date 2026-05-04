@@ -95,8 +95,11 @@
     </p>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="control/src/js/supabase-client.js"></script>
   <script src="control/src/js/auth.js"></script>
   <script>
+    
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js')
