@@ -233,6 +233,27 @@
 .admin-user-email{font-size:.76rem;color:var(--txt-3)}
 .admin-user-meta{text-align:right;flex-shrink:0}
 
+/* ============================================
+   OPTION BUTTONS (formulario amigable)
+============================================ */
+.opt-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.opt-btn{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:10px 14px;border-radius:var(--r-md);
+  border:1px solid var(--border);background:var(--bg-3);
+  color:var(--txt-2);font-family:var(--ff-head);font-size:.78rem;font-weight:600;
+  cursor:pointer;transition:all .18s;line-height:1.2;text-align:center;
+  min-width:72px;
+}
+.opt-btn:hover{border-color:var(--border-md);color:var(--txt);background:var(--bg-2)}
+.opt-btn.selected{
+  background:var(--green-dim);border-color:var(--green);
+  color:var(--green);box-shadow:0 0 0 2px rgba(52,211,115,.15);
+}
+.opt-btn .opt-icon{font-size:1.3rem;line-height:1}
+.opt-label{font-size:.82rem;font-weight:600;color:var(--txt-2);margin-bottom:6px;font-family:var(--ff-head)}
+.opt-sublabel{font-size:.72rem;color:var(--txt-3);margin-top:2px}
+
 /* CTA vacío */
 .cta-empty{text-align:center;padding:48px 24px}
 .cta-emoji{font-size:4rem;margin-bottom:16px}
@@ -259,4 +280,3 @@
   .result-breakdown{grid-template-columns:1fr 1fr}
   .dash-side{flex-direction:column}
 }
-

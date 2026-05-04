@@ -188,10 +188,6 @@ function renderPetPage(petData) {
   baseImg.src = stage.img
   baseImg.alt = `Mascota – ${stage.name}`
 
-  // Locked si no es etapa 3
-  const canvasWrap = document.querySelector('.pet-canvas-wrap')
-  canvasWrap.classList.toggle('locked', stage.id !== 'full')
-
   // Nombre
   el('pet-name-display').textContent = petData.pet_name || 'Arumi'
 

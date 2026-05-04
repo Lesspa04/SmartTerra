@@ -4,13 +4,13 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-  // ── SUPABASE & AUTH ────────────────────────────────────── 
-    const { data: { session } } = await db.auth.getSession()
-    if (!session) { 
-      location.href = 'index.html'; 
-      return 
-    }
-  const user = session.user
+  // ── SUPABASE & AUTH ────────────────────────────────────── ACTIVAR DESPUES DE AJUSTAR SUPABASE
+  //const { data: { session } } = await db.auth.getSession()
+  //if (!session) { 
+  //  location.href = 'index.html'; 
+  //  return 
+  //}
+  //const user = session.user
 
   // ── ESTADO GLOBAL ────────────────────────────────────────
   let profile      = null
@@ -217,7 +217,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   function loadRegistrarPage() {
     currentStep = 0
     showStep(0)
-    document.getElementById('entry-form')?.reset()
+    // Resetear todos los opt-btn a su valor por defecto (el primer botón de cada grupo)
+    document.querySelectorAll('[data-field]').forEach(group => {
+      group.querySelectorAll('.opt-btn').forEach((btn, i) => {
+        btn.classList.toggle('selected', i === 0)
+      })
+    })
   }
 
   function showStep(n) {
@@ -241,6 +246,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // ── EVENTOS OPT-BUTTONS ─────────────────────────────────
+  document.getElementById('entry-form')?.addEventListener('click', e => {
+    const btn = e.target.closest('.opt-btn')
+    if (!btn) return
+    const group = btn.closest('[data-field]')
+    if (!group) return
+    group.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'))
+    btn.classList.add('selected')
+  })
+
   // ── EVENTOS FORM ────────────────────────────────────────
   document.getElementById('step-next')?.addEventListener('click', async () => {
     if (currentStep < TOTAL_STEPS - 2) {
@@ -263,26 +278,60 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // ── FORM HELPERS ────────────────────────────────────────
   function getFormData() {
-    const f = document.getElementById('entry-form')
-    const g = name => parseFloat(f.elements[name]?.value) || 0
-    const s = name => f.elements[name]?.value || ''
+    // Lee los botones de opción seleccionados
+    const vals = {}
+    document.querySelectorAll('[data-field]').forEach(group => {
+      const field = group.dataset.field
+      const sel   = group.querySelector('.opt-btn.selected')
+      if (!sel) return
+      vals[field] = sel.dataset.val  // string, se parsea abajo
+
+      // Soporte para data-also="campo:valor" (vuelo largo)
+      if (sel.dataset.also) {
+        const [extraField, extraVal] = sel.dataset.also.split(':')
+        vals[extraField] = extraVal
+      }
+    })
+
+    const n = f => parseFloat(vals[f]) || 0
+    const s = f => vals[f] || 'gasoline'
+
     return {
-      car_km: g('car_km'), car_type: s('car_type') || 'gasoline',
-      moto_km: g('moto_km'), bus_urban_km: g('bus_urban_km'), 
-      bus_inter_km: g('bus_inter_km'), metro_km: g('metro_km'),
-      taxi_moto_km: g('taxi_moto_km'), bike_km: g('bike_km'),
-      ebike_km: g('ebike_km'), flight_dom_km: g('flight_dom_km'),
-      flight_sh_km: g('flight_sh_km'), flight_lh_km: g('flight_lh_km'),
-      elec_kwh: g('elec_kwh'), renewable_pct: g('renewable_pct'),
-      gas_m3: g('gas_m3'), glp_kg: g('glp_kg'), lena_kg: g('lena_kg'),
-      beef_g: g('beef_g'), pork_g: g('pork_g'), poultry_g: g('poultry_g'),
-      fish_g: g('fish_g'), eggs_g: g('eggs_g'),
-      dairy_milk_g: g('dairy_milk_g'), dairy_cheese_g: g('dairy_cheese_g'),
-      dairy_yogurt_g: g('dairy_yogurt_g'), rice_g: g('rice_g'),
-      legumes_g: g('legumes_g'), veg_g: g('veg_g'), fruits_g: g('fruits_g'),
-      proc_g: g('proc_g'), waste_kg: g('waste_kg'), recycled_kg: g('recycled_kg'),
-      composted_kg: g('composted_kg'), burned_kg: g('burned_kg'),
-      hot_water_min: g('hot_water_min')
+      car_km:          n('car_km'),
+      car_type:        s('car_type'),
+      moto_km:         n('moto_km'),
+      bus_urban_km:    n('bus_urban_km'),
+      bus_inter_km:    n('bus_inter_km'),
+      metro_km:        n('metro_km'),
+      taxi_moto_km:    n('taxi_moto_km'),
+      bike_km:         n('bike_km'),
+      ebike_km:        0,
+      flight_dom_km:   n('flight_dom_km'),
+      flight_sh_km:    n('flight_sh_km'),
+      flight_lh_km:    n('flight_lh_km'),
+      elec_kwh:        n('elec_kwh'),
+      renewable_pct:   n('renewable_pct'),
+      gas_m3:          n('gas_m3'),
+      glp_kg:          n('glp_kg'),
+      lena_kg:         n('lena_kg'),
+      beef_g:          n('beef_g'),
+      pork_g:          n('pork_g'),
+      poultry_g:       n('poultry_g'),
+      fish_g:          n('fish_g'),
+      eggs_g:          n('eggs_g'),
+      dairy_milk_g:    n('dairy_milk_g'),
+      dairy_cheese_g:  n('dairy_cheese_g'),
+      dairy_yogurt_g:  n('dairy_yogurt_g'),
+      rice_g:          n('rice_g'),
+      legumes_g:       n('legumes_g'),
+      veg_g:           n('veg_g'),
+      fruits_g:        n('fruits_g'),
+      proc_g:          n('proc_g'),
+      waste_kg:        n('waste_kg'),
+      recycled_kg:     n('recycled_kg'),
+      composted_kg:    n('composted_kg'),
+      burned_kg:       n('burned_kg'),
+      hot_water_min:   n('hot_water_min'),
     }
   }
 
@@ -356,7 +405,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await updatePet(co2.total)
     await loadEntries()
-
+    
     const existingKeys = achievements.map(a => a.achievement_key)
       const newOnes = checkAchievements(entry, petData, allEntries.length, existingKeys)
       for (const ach of newOnes) {
@@ -368,7 +417,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }])
         showToast(`🏆 ${ach.name}`, 'success')
       }
-    await loadAchievements() 
+    await loadAchievements()
 
     document.getElementById('result-saved').style.display = ''
     showToast('Guardado!')
