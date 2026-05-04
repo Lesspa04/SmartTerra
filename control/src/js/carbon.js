@@ -1,19 +1,5 @@
 // ============================================================
 // CÁLCULO DE HUELLA DE CARBONO — SmartTerra
-//
-// Fuentes de factores de emisión:
-//   [1] IPCC AR6 (2022) — Anexo II, Tabla 2.SM.1
-//       https://www.ipcc.ch/report/ar6/wg3/
-//   [2] Our World in Data — "Food's carbon footprint" (Poore & Nemecek, 2018, Science)
-//       https://ourworldindata.org/food-choice-vs-eating-local
-//   [3] UPME (2023) — Factor de emisión red eléctrica Colombia: 0.2330 tCO2/MWh
-//       https://www.upme.gov.co/
-//   [4] EPA (2023) — Emission Factors for Greenhouse Gas Inventories
-//       https://www.epa.gov/climateleadership/ghg-emission-factors-hub
-//   [5] DEFRA (2023) — Greenhouse Gas Reporting: Conversion Factors
-//       https://www.gov.uk/government/collections/government-conversion-factors-for-company-reporting
-//   [6] IDEAM (2021) — Inventario Nacional de GEI Colombia
-//       https://www.ideam.gov.co/
 // ============================================================
 
 const EMISSION_SOURCES = {
@@ -163,7 +149,7 @@ function getRecommendations(d, co2) {
 
   // TRANSPORTE
   if ((d.car_km || 0) > 10 && d.car_type === 'gasoline') {
-    recs.push({ priority:'high', icon:'🚌',
+    recs.push({ priority:'high', icon:'<i class="fa-solid fa-bus"></i>',
       title:'Cambia al transporte público',
       desc:`${d.car_km} km en carro gasolina = ${r2(d.car_km * EMISSION_SOURCES.car.gasoline)} kg CO₂. El bus urbano emite 77% menos por km.`,
       action:'Prueba SITP/MIO/Transmilenio en al menos 2 trayectos esta semana',
@@ -171,7 +157,7 @@ function getRecommendations(d, co2) {
     })
   }
   if ((d.car_type === 'gasoline' || d.car_type === 'diesel') && (d.car_km || 0) > 0) {
-    recs.push({ priority:'medium', icon:'⚡',
+    recs.push({ priority:'medium', icon:'<i class="fa-solid fa-bolt"></i>',
       title:'Considera un vehículo eléctrico',
       desc:`Un eléctrico con la red colombiana emite ${EMISSION_SOURCES.car.electric} kg CO₂/km vs ${EMISSION_SOURCES.car[d.car_type]} en tu vehículo actual (${r2((1 - EMISSION_SOURCES.car.electric/EMISSION_SOURCES.car[d.car_type])*100)}% menos).`,
       action:'Revisa los incentivos tributarios para vehículos eléctricos en Colombia (Ley 1964/2019)',
@@ -184,7 +170,7 @@ function getRecommendations(d, co2) {
       (d.flight_sh_km  || 0) * EMISSION_SOURCES.flight_short_haul +
       (d.flight_lh_km  || 0) * EMISSION_SOURCES.flight_long_haul
     )
-    recs.push({ priority:'high', icon:'✈️',
+    recs.push({ priority:'high', icon:'<i class="fa-solid fa-plane"></i>',
       title:'Los vuelos tienen alto impacto',
       desc:`Tus vuelos de hoy generaron ${flightCO2} kg CO₂eq (factor ×1.9 de radiación forzada incluido).`,
       action:'Compensa tus vuelos en plataformas certificadas Gold Standard o VCS',
@@ -192,7 +178,7 @@ function getRecommendations(d, co2) {
     })
   }
   if ((d.bike_km || 0) >= 3) {
-    recs.push({ priority:'positive', icon:'🚴',
+    recs.push({ priority:'positive', icon:'<i class="fa-solid fa-bicycle"></i>',
       title:'¡Pedalear es la mejor opción!',
       desc:`${d.bike_km} km en bici ahorraste ${r2(d.bike_km * EMISSION_SOURCES.car.gasoline)} kg CO₂ vs carro. Cero emisiones, cero costo.`,
       action:'¡Sigue pedaleando! Cada km en bici reduce tu huella y mejora tu salud',
@@ -202,7 +188,7 @@ function getRecommendations(d, co2) {
 
   // ENERGÍA
   if ((d.elec_kwh || 0) > 10) {
-    recs.push({ priority:'medium', icon:'💡',
+    recs.push({ priority:'medium', icon:'<i class="fa-regular fa-lightbulb"></i>',
       title:'Reduce tu consumo eléctrico',
       desc:`${d.elec_kwh} kWh × 0.233 kgCO₂/kWh (red colombiana) = ${r2(d.elec_kwh * 0.233)} kg CO₂. El hogar promedio CO consume ~9 kWh/día.`,
       action:'Desconecta dispositivos en stand-by y reemplaza bombillas por LED',
@@ -210,7 +196,7 @@ function getRecommendations(d, co2) {
     })
   }
   if ((d.renewable_pct || 0) < 20) {
-    recs.push({ priority:'medium', icon:'☀️',
+    recs.push({ priority:'medium', icon:'<i class="fa-solid fa-sun"></i>',
       title:'Adopta energía solar',
       desc:'Colombia tiene uno de los mayores potenciales solares de América Latina (4.5–6 kWh/m²/día en muchas regiones).',
       action:'Consulta el FENOGE (Fondo ENE) y la Ley 1715/2014 para incentivos de paneles solares',
@@ -218,7 +204,7 @@ function getRecommendations(d, co2) {
     })
   }
   if ((d.gas_m3 || 0) > 1.5) {
-    recs.push({ priority:'medium', icon:'🔥',
+    recs.push({ priority:'medium', icon:'<i class="fa-solid fa-fire-flame-curved"></i>',
       title:'Alto consumo de gas natural',
       desc:`${d.gas_m3} m³ × 2.04 kgCO₂/m³ = ${r2(d.gas_m3 * 2.04)} kg CO₂. Reducir la temperatura de la ducha y cocinar eficientemente ayuda.`,
       action:'Instala calefactor solar o ducha eléctrica de bajo consumo',
@@ -228,7 +214,7 @@ function getRecommendations(d, co2) {
 
   // ALIMENTACIÓN
   if ((d.beef_g || 0) > 80) {
-    recs.push({ priority:'high', icon:'🥩',
+    recs.push({ priority:'high', icon:'<i class="fa-solid fa-drumstick-bite"></i>',
       title:'La res tiene la mayor huella alimentaria',
       desc:`${d.beef_g}g de res = ${r2(d.beef_g/1000*27)} kg CO₂eq. La ganadería bovina representa ~65% de las emisiones del sector agropecuario en CO.`,
       action:'Sustituye por pollo (74% menos CO₂), fríjol (97% menos) o huevo (84% menos)',
@@ -236,7 +222,7 @@ function getRecommendations(d, co2) {
     })
   }
   if ((d.pork_g || 0) > 150) {
-    recs.push({ priority:'medium', icon:'🐖',
+    recs.push({ priority:'medium', icon:'<i class="fa-solid fa-bacon"></i>',
       title:'Modera el consumo de cerdo',
       desc:`${d.pork_g}g de cerdo = ${r2(d.pork_g/1000*7.61)} kg CO₂eq. Es más eficiente que la res, pero aún supera a legumbres y vegetales.`,
       action:'Alterna con proteínas vegetales como lenteja o garbanzo',
@@ -244,7 +230,7 @@ function getRecommendations(d, co2) {
     })
   }
   if ((d.rice_g || 0) > 200) {
-    recs.push({ priority:'medium', icon:'🍚',
+    recs.push({ priority:'medium', icon:'<i class="fa-solid fa-bowl-rice"></i>',
       title:'El arroz tiene alta huella por el metano',
       desc:`${d.rice_g}g de arroz = ${r2(d.rice_g/1000*2.5)} kg CO₂eq. El arroz inundado libera metano (CH4), un GEI 28× más potente que el CO₂.`,
       action:'Combina con papa, plátano o quinua que tienen menor huella',
@@ -252,7 +238,7 @@ function getRecommendations(d, co2) {
     })
   }
   if ((d.veg_g || 0) + (d.fruits_g || 0) + (d.legumes_g || 0) < 200) {
-    recs.push({ priority:'medium', icon:'🥦',
+    recs.push({ priority:'medium', icon:'<i class="fa-solid fa-carrot"></i>',
       title:'Aumenta vegetales, frutas y legumbres',
       desc:'Una dieta basada en plantas emite 2–3× menos CO₂eq que una dieta omnívora según el metaanálisis de Poore & Nemecek.',
       action:'Incorpora al menos 400g de frutas y verduras diarias (recomendación OMS)',
@@ -264,7 +250,7 @@ function getRecommendations(d, co2) {
   if ((d.waste_kg || 0) > 0.5) {
     const recycleRatio = (d.recycled_kg || 0) / (d.waste_kg || 1)
     if (recycleRatio < 0.25) {
-      recs.push({ priority:'medium', icon:'♻️',
+      recs.push({ priority:'medium', icon:'<i class="fa-solid fa-recycle"></i>',
         title:'Recicla más para reducir emisiones',
         desc:`Solo reciclaste ${Math.round(recycleRatio*100)}% de tus residuos. Cada kg en relleno sanitario emite 0.58 kg CO₂eq (incluye metano a 28 años).`,
         action:'Separa en 4 categorías: vidrio, papel/cartón, plásticos, metales. Busca tu punto limpio más cercano.',
@@ -273,7 +259,7 @@ function getRecommendations(d, co2) {
     }
   }
   if ((d.composted_kg || 0) > 0) {
-    recs.push({ priority:'positive', icon:'🌱',
+    recs.push({ priority:'positive', icon:'<i class="fa-solid fa-seedling"></i>',
       title:'¡El compostaje reduce tus residuos!',
       desc:'Compostar evita que los residuos orgánicos generen metano en rellenos sanitarios. Cada kg compostado ahorra 0.08 kg CO₂eq vs relleno.',
       action:'¡Sigue compostando! Comparte el compost con jardines o huertas comunitarias',
@@ -283,14 +269,14 @@ function getRecommendations(d, co2) {
 
   // GENERAL
   if (co2.total <= GLOBAL_REF.target) {
-    recs.push({ priority:'positive', icon:'🏆',
+    recs.push({ priority:'positive', icon:'<i class="fa-solid fa-crown"></i>',
       title:'¡Huella por debajo del objetivo climático!',
       desc:`${co2.total} kg CO₂eq está bajo los ${GLOBAL_REF.target} kg/día del objetivo IPCC para 1.5°C. ¡Eres parte de la solución!`,
       action:'Comparte tus hábitos e inspira a tu comunidad',
       source:'IPCC AR6 SPM'
     })
   } else if (co2.total > GLOBAL_REF.daily) {
-    recs.push({ priority:'high', icon:'⚠️',
+    recs.push({ priority:'high', icon:'<i class="fa-solid fa-triangle-exclamation"></i>',
       title:'Tu huella supera el promedio mundial',
       desc:`${co2.total} kg CO₂eq > promedio mundial de ${GLOBAL_REF.daily} kg/día. Para cumplir París necesitamos llegar a ${GLOBAL_REF.target} kg/día.`,
       action:'Elige la recomendación de mayor impacto y comprométete esta semana',
