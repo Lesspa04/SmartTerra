@@ -1,0 +1,4 @@
+/* Link styles */
+.link-sm{font-size:.82rem;font-weight:500;color:var(--green)}
+.link-sm:hover{opacity:.75}
+

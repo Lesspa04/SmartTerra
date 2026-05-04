@@ -1,0 +1,63 @@
+/* ============================================
+   BAR CHART 
+============================================ */
+.bar-chart-wrap{
+  height:200px;display:flex;align-items:flex-end;gap:6px;
+  padding:10px 0 0;position:relative;overflow:hidden;
+}
+.chart-empty{
+  width:100%;text-align:center;color:var(--txt-3);
+  font-size:.88rem;align-self:center;padding:40px;
+}
+
+/* Reference lines */
+.chart-ref-line{
+  position:absolute;left:0;right:0;height:1px;
+  display:flex;align-items:center;
+}
+.chart-ref-line span{
+  font-size:.65rem;color:var(--txt-3);background:var(--bg-3);
+  padding:0 4px;position:absolute;right:0;
+  font-family:var(--ff-head);
+}
+
+/* Each bar column */
+.bar-col{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;gap:5px;height:100%;
+  position:relative;justify-content:flex-end;
+}
+.bar-col-inner{
+  width:100%;max-width:36px;border-radius:5px 5px 0 0;
+  transition:height .5s cubic-bezier(.4,0,.2,1);
+  min-height:2px;cursor:pointer;position:relative;
+}
+.bar-col-inner:hover{filter:brightness(1.2)}
+.bar-col-label{font-size:.68rem;color:var(--txt-3);font-family:var(--ff-head);white-space:nowrap}
+.bar-col-val{
+  position:absolute;top:-18px;left:50%;transform:translateX(-50%);
+  font-size:.68rem;color:var(--txt-2);font-family:var(--ff-head);font-weight:600;
+  white-space:nowrap;
+}
+
+/* Stacked segments */
+.bar-segment{
+  width:100%;transition:height .5s ease;
+}
+.bar-segment:first-child{border-radius:5px 5px 0 0}
+
+/* ============================================
+   LINE CHART (Canvas-based via JS)
+============================================ */
+.line-chart-wrap{width:100%;overflow:hidden}
+.line-chart-wrap canvas{display:block;width:100%!important}
+
+/* ============================================
+   ADMIN DIST CHART
+============================================ */
+.dist-chart{display:flex;flex-direction:column;gap:8px;padding:8px 0}
+.dist-bar-row{display:flex;align-items:center;gap:12px}
+.dist-label{font-size:.8rem;color:var(--txt-2);width:100px;flex-shrink:0;font-family:var(--ff-head)}
+.dist-bar-track{flex:1;height:22px;background:var(--bg-2);border-radius:var(--r-sm);overflow:hidden}
+.dist-bar-fill{height:100%;border-radius:var(--r-sm);transition:width .6s ease;display:flex;align-items:center;padding-left:8px}
+.dist-count{font-size:.75rem;font-weight:700;font-family:var(--ff-head);color:#071009}

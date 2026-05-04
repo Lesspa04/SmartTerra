@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0e2a18">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="SmartTerra">
+  <link rel="apple-touch-icon" href="/control/public/assets/icons/icon-192x192.png">
+  <link rel="manifest" href="manifest.json">
+  
+  <link rel="icon" href="control/public/assets/icons/pestaña.png">
+  <title>SmartTerra — Huella de Carbono</title>
+  
+  <link rel="stylesheet" href="control/src/css/base.css">
+  <link rel="stylesheet" href="control/src/css/auth.css">
+</head>
+<body class="auth-body">
+
+  <div class="auth-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <main class="auth-container">
+    <!-- Logo -->
+    <div class="auth-logo animate-up">
+      <div class="auth-logo-icon">
+        <img src="control/public/assets/icons/pestaña.png" alt="SmartTerra" width="48" height="48">
+      </div>
+      <h1 class="auth-logo-title">SmartTerra</h1>
+      <p class="auth-logo-sub">Mide tu huella, cuida el planeta</p>
+    </div>
+
+    <!-- Card con tabs Login / Registro -->
+    <div class="auth-card animate-up delay-1">
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Iniciar sesión</button>
+        <button class="auth-tab" data-tab="register">Crear cuenta</button>
+      </div>
+
+      <!-- LOGIN -->
+      <form id="form-login" class="auth-form active" novalidate>
+        <div id="login-error" class="alert alert-error" style="display:none"></div>
+        <div class="field-group">
+          <label for="login-email">Email</label>
+          <input id="login-email" type="email" placeholder="tu@email.com" autocomplete="email" required>
+        </div>
+        <div class="field-group">
+          <label for="login-password">Contraseña</label>
+          <div class="input-eye-wrap">
+            <input id="login-password" type="password" placeholder="••••••••" autocomplete="current-password" required>
+            <button type="button" class="eye-btn" data-target="login-password">👁</button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" id="login-btn">
+          <span class="btn-text">Entrar</span>
+          <span class="btn-spinner" style="display:none"><i class="fa-regular fa-hourglass-half"></i></span>
+        </button>
+      </form>
+
+      <!-- REGISTRO -->
+      <form id="form-register" class="auth-form" novalidate>
+        <div id="register-error" class="alert alert-error" style="display:none"></div>
+        <div id="register-success" class="alert alert-success" style="display:none"></div>
+        <div class="field-group">
+          <label for="reg-name">Nombre completo</label>
+          <input id="reg-name" type="text" placeholder="Tu nombre" autocomplete="name" required>
+        </div>
+        <div class="field-group">
+          <label for="reg-email">Email</label>
+          <input id="reg-email" type="email" placeholder="tu@email.com" autocomplete="email" required>
+        </div>
+        <div class="grid-2-form">
+          <div class="field-group">
+            <label for="reg-pass">Contraseña</label>
+            <input id="reg-pass" type="password" placeholder="Mín. 6 chars" autocomplete="new-password" required>
+          </div>
+          <div class="field-group">
+            <label for="reg-confirm">Confirmar</label>
+            <input id="reg-confirm" type="password" placeholder="Repetir" autocomplete="new-password" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" id="register-btn">
+          <span class="btn-text">Crear cuenta</span>
+          <span class="btn-spinner" style="display:none"><i class="fa-regular fa-hourglass-half"></i></span>
+        </button>
+      </form>
+    </div>
+
+    <p class="auth-footer animate-up delay-2">
+      Al registrarte aceptas cuidar nuestro planeta
+    </p>
+  </main>
+
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('SW registrado', reg))
+        .catch(err => console.log('SW error', err))
+    })
+  }
+</script>
+</body>
+</html>

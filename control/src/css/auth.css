@@ -1,0 +1,44 @@
+.auth-body{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;overflow:hidden}
+
+.auth-bg{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.07}
+.orb-1{width:500px;height:500px;background:var(--green);top:-150px;right:-100px;animation:drift 14s ease-in-out infinite}
+.orb-2{width:380px;height:380px;background:var(--green-2);bottom:-100px;left:-80px;animation:drift 18s ease-in-out infinite reverse}
+.orb-3{width:280px;height:280px;background:var(--amber);top:40%;left:30%;animation:drift 22s ease-in-out infinite}
+@keyframes drift{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-20px) scale(1.05)}}
+
+.auth-container{
+  width:100%;max-width:420px;
+  display:flex;flex-direction:column;gap:20px;
+  position:relative;z-index:1;
+}
+
+.auth-logo{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.auth-logo-icon{
+  width:72px;height:72px;background:var(--green-dim);
+  border:2px solid var(--border-lg);border-radius:var(--r-xl);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 40px rgba(52,211,115,.12);
+}
+.auth-logo-title{font-size:2rem;font-weight:800;color:var(--txt);letter-spacing:-.03em;margin:0}
+.auth-logo-sub{color:var(--txt-3);font-size:.9rem;margin:0}
+
+.auth-card{
+  background:var(--bg-3);border:1px solid var(--border-md);
+  border-radius:var(--r-xl);padding:28px;
+  box-shadow:var(--shadow),0 0 80px rgba(52,211,115,.04);
+}
+
+.auth-tabs{display:flex;gap:4px;background:var(--bg-2);border-radius:var(--r-md);padding:4px;margin-bottom:22px}
+.auth-tab{
+  flex:1;padding:8px;border:none;border-radius:var(--r-sm);
+  background:transparent;color:var(--txt-3);
+  font-family:var(--ff-head);font-weight:600;font-size:.88rem;
+  cursor:pointer;transition:all .2s;
+}
+.auth-tab.active{background:var(--bg-4);color:var(--green);box-shadow:var(--shadow-sm)}
+
+.auth-form{display:none;flex-direction:column}
+.auth-form.active{display:flex}
+
+.auth-footer{text-align:center;color:var(--txt-3);font-size:.83rem}

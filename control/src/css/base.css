@@ -1,0 +1,266 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+
+/* ============================================
+   DESIGN TOKENS
+============================================ */
+:root {
+  /* Backgrounds */
+  --bg:        #080f0b;
+  --bg-1:      #0c1a10;
+  --bg-2:      #112016;
+  --bg-3:      #172b1e;
+  --bg-4:      #1c3323;
+
+  /* Borders */
+  --border:    rgba(52,211,115,.10);
+  --border-md: rgba(52,211,115,.20);
+  --border-lg: rgba(52,211,115,.35);
+
+  /* Brand green */
+  --green:     #34d373;
+  --green-2:   #22c55e;
+  --green-3:   #16a34a;
+  --green-dim: rgba(52,211,115,.12);
+  --green-glow:rgba(52,211,115,.06);
+
+  /* Status colors */
+  --amber:     #f59e0b;
+  --amber-dim: rgba(245,158,11,.13);
+  --red:       #f87171;
+  --red-dim:   rgba(248,113,113,.13);
+  --blue:      #60a5fa;
+  --blue-dim:  rgba(96,165,250,.13);
+  --purple:    #a78bfa;
+  --purple-dim:rgba(167,139,250,.13);
+
+  /* Text */
+  --txt:       #dff0e6;
+  --txt-2:     #8db89b;
+  --txt-3:     #4e7059;
+
+  /* Radii */
+  --r-sm: 8px;
+  --r-md: 13px;
+  --r-lg: 18px;
+  --r-xl: 24px;
+  --r-full: 999px;
+
+  /* Shadows */
+  --shadow:    0 4px 28px rgba(0,0,0,.45);
+  --shadow-sm: 0 2px 12px rgba(0,0,0,.3);
+
+  /* Typography */
+  --ff-head: 'Syne', sans-serif;
+  --ff-body: 'DM Sans', sans-serif;
+
+  /* Layout */
+  --sidebar-w: 230px;
+  --topbar-h:  58px;
+}
+
+/* ============================================
+   RESET
+============================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth;height:100%}
+body{font-family:var(--ff-body);background:var(--bg);color:var(--txt);min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.6}
+img{display:block;max-width:100%}
+button{cursor:pointer;font-family:inherit}
+input,select,textarea{font-family:inherit}
+a{color:var(--green);text-decoration:none}
+a:hover{opacity:.8}
+
+/* ============================================
+   TYPOGRAPHY
+============================================ */
+h1,h2,h3,h4{font-family:var(--ff-head);font-weight:700;line-height:1.15;color:var(--txt)}
+h1{font-size:clamp(1.6rem,3.5vw,2.4rem)}
+h2{font-size:clamp(1.3rem,3vw,1.9rem)}
+h3{font-size:clamp(1rem,2vw,1.25rem)}
+p{color:var(--txt-2)}
+.small{font-size:.82rem}
+
+/* ============================================
+   SCROLLBAR
+============================================ */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg-1)}
+::-webkit-scrollbar-thumb{background:var(--green-3);border-radius:3px}
+
+/* ============================================
+   UTILITY CLASSES
+============================================ */
+.text-green  {color:var(--green)!important}
+.text-amber  {color:var(--amber)!important}
+.text-red    {color:var(--red)!important}
+.text-muted  {color:var(--txt-3)}
+.text-2      {color:var(--txt-2)}
+.text-center {text-align:center}
+
+.flex        {display:flex}
+.flex-col    {flex-direction:column}
+.items-center{align-items:center}
+.justify-between{justify-content:space-between}
+.gap-2       {gap:8px}
+.gap-3       {gap:12px}
+.gap-4       {gap:16px}
+.w-full      {width:100%}
+
+/* ============================================
+   BUTTONS
+============================================ */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 22px;border-radius:var(--r-md);
+  font-family:var(--ff-head);font-weight:600;font-size:.9rem;
+  border:none;transition:all .2s ease;line-height:1.2;
+  white-space:nowrap;text-decoration:none;
+}
+.btn-primary{background:var(--green);color:#071009}
+.btn-primary:hover{background:var(--green-2);transform:translateY(-1px);box-shadow:0 6px 22px rgba(52,211,115,.28)}
+.btn-ghost{background:transparent;color:var(--txt-2);border:1px solid var(--border-md)}
+.btn-ghost:hover{background:var(--bg-3);color:var(--txt);border-color:var(--border-lg)}
+.btn-danger{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,.2)}
+.btn-danger:hover{background:rgba(248,113,113,.22)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+.btn-sm{padding:6px 14px;font-size:.82rem;border-radius:var(--r-sm)}
+.btn-lg{padding:14px 30px;font-size:1rem}
+.btn-full{width:100%;justify-content:center}
+.btn-icon{padding:8px;border-radius:var(--r-sm)}
+
+.icon-btn{
+  background:none;border:none;cursor:pointer;
+  color:var(--txt-2);font-size:1.1rem;
+  width:36px;height:36px;border-radius:var(--r-sm);
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s,color .2s;
+}
+.icon-btn:hover{background:var(--bg-3);color:var(--txt)}
+.icon-btn-sm{background:none;border:none;cursor:pointer;color:var(--txt-3);font-size:.9rem;transition:color .2s;line-height:1}
+.icon-btn-sm:hover{color:var(--green)}
+
+/* ============================================
+   CARDS
+============================================ */
+.card{
+  background:var(--bg-3);border:1px solid var(--border);
+  border-radius:var(--r-lg);padding:22px;
+  box-shadow:var(--shadow);transition:border-color .2s;
+}
+.card:hover{border-color:var(--border-md)}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+
+/* ============================================
+   ALERTS
+============================================ */
+.alert{padding:11px 16px;border-radius:var(--r-md);font-size:.88rem;margin-bottom:14px}
+.alert-error  {background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,.2)}
+.alert-success{background:var(--green-dim);color:var(--green);border:1px solid var(--border-md)}
+.alert-info   {background:var(--blue-dim);color:var(--blue);border:1px solid rgba(96,165,250,.2)}
+
+/* ============================================
+   FORMS
+============================================ */
+.field-group{margin-bottom:14px}
+label{display:block;font-size:.83rem;font-weight:500;color:var(--txt-2);margin-bottom:5px;font-family:var(--ff-head)}
+input,select,textarea{
+  width:100%;padding:10px 13px;
+  background:var(--bg-2);border:1px solid var(--border);
+  border-radius:var(--r-sm);color:var(--txt);
+  font-size:.93rem;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--green);
+  box-shadow:0 0 0 3px rgba(52,211,115,.12);
+}
+input::placeholder{color:var(--txt-3)}
+select option{background:var(--bg-2)}
+.field-hint{font-size:.76rem;color:var(--txt-3);margin-top:4px;display:block}
+
+.grid-2-form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:500px){.grid-2-form{grid-template-columns:1fr}}
+
+.input-eye-wrap{position:relative}
+.input-eye-wrap input{padding-right:42px}
+.eye-btn{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;color:var(--txt-3);font-size:.9rem;
+}
+.eye-btn:hover{color:var(--txt-2)}
+
+/* ============================================
+   BADGES
+============================================ */
+.badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 9px;border-radius:var(--r-full);
+  font-size:.75rem;font-weight:600;font-family:var(--ff-head);
+}
+.badge-green {background:var(--green-dim);color:var(--green);border:1px solid var(--border-md)}
+.badge-amber {background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,.2)}
+.badge-red   {background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,.2)}
+.badge-blue  {background:var(--blue-dim);color:var(--blue);border:1px solid rgba(96,165,250,.2)}
+
+/* ============================================
+   PROGRESS
+============================================ */
+.progress-bar{width:100%;height:7px;background:var(--bg-2);border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--green-3),var(--green));transition:width .5s ease}
+
+/* ============================================
+   TOAST
+============================================ */
+.toast-container{
+  position:fixed;bottom:24px;right:24px;z-index:9999;
+  display:flex;flex-direction:column;gap:8px;
+  pointer-events:none;
+}
+.toast{
+  background:var(--bg-4);border:1px solid var(--border-md);
+  border-radius:var(--r-md);padding:12px 18px;
+  font-size:.88rem;color:var(--txt);
+  box-shadow:var(--shadow);pointer-events:auto;
+  animation:toast-in .3s ease,toast-out .3s ease 2.7s forwards;
+  max-width:300px;
+}
+@keyframes toast-in{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+@keyframes toast-out{from{opacity:1;transform:none}to{opacity:0;transform:translateX(40px)}}
+.toast-success{border-color:var(--border-lg)}
+.toast-error{border-color:rgba(248,113,113,.3)}
+
+/* ============================================
+   STAT CARDS
+============================================ */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+@media(max-width:900px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.stats-grid{grid-template-columns:1fr 1fr}}
+
+.stat-card{
+  background:var(--bg-3);border:1px solid var(--border);
+  border-radius:var(--r-lg);padding:18px;
+  display:flex;align-items:center;gap:14px;
+  position:relative;overflow:hidden;
+}
+.stat-card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+  opacity:.35;
+}
+.stat-icon{font-size:1.5rem;flex-shrink:0}
+.stat-body{flex:1;min-width:0}
+.stat-value{font-family:var(--ff-head);font-size:1.8rem;font-weight:800;line-height:1;color:var(--txt)}
+.stat-label{font-size:.78rem;color:var(--txt-3);margin-top:3px;font-weight:500}
+.stat-badge{position:absolute;top:12px;right:12px}
+
+/* ============================================
+   ANIMATIONS
+============================================ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(52,211,115,.3)}50%{box-shadow:0 0 0 8px rgba(52,211,115,0)}}
+
+.animate-up{animation:fadeUp .4s ease both}
+.delay-1{animation-delay:.1s}
+.delay-2{animation-delay:.2s}
+.delay-3{animation-delay:.3s}

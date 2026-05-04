@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0e2a18">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="SmartTerra">
+  <link rel="apple-touch-icon" href="/control/public/assets/icons/icon-192x192.png">
+  <link rel="manifest" href="manifest.json">
+  
+  <link rel="icon" href="control/public/assets/icons/pestaña.png">
+  <title>SmartTerra — Huella de Carbono</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="control/src/css/base.css">
+  <link rel="stylesheet" href="control/src/css/app.css">
+  <link rel="stylesheet" href="control/src/css/achievements.css">
+  <link rel="stylesheet" href="control/src/css/components.css">
+  <link rel="stylesheet" href="control/src/css/pet.css">
+  <link rel="stylesheet" href="control/src/css/charts.css">
+</head>
+<body>
+
+<!-- ====== SIDEBAR ====== -->
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-header">
+    <div class="brand">
+      <span class="brand-name">SmartTerra</span>
+    </div>
+    <button id="sidebar-close" class="icon-btn sidebar-close-btn" aria-label="Cerrar menú">✕</button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a href="#" class="nav-item active" data-page="dashboard">
+      <span class="nav-icon"><i class="fa-solid fa-leaf"></i></span><span>Dashboard</span>
+    </a>
+    <a href="#" class="nav-item" data-page="registrar">
+      <span class="nav-icon"><i class="fa-solid fa-pen"></i></span><span>Registrar día</span>
+    </a>
+    <a href="#" class="nav-item" data-page="historial">
+      <span class="nav-icon"><i class="fa-solid fa-chart-column"></i></span><span>Historial</span>
+    </a>
+    <a href="#" class="nav-item" data-page="mascota">
+      <span class="nav-icon"><i class="fa-solid fa-seedling"></i></span><span>Mi Mascota</span>
+    </a>
+    <a href="#" class="nav-item" data-page="logros">
+      <span class="nav-icon"><i class="fa-solid fa-trophy"></i></span><span>Logros</span>
+    </a>
+
+    <!-- Solo visible para admins -->
+    <div class="nav-divider admin-only" style="display:none"></div>
+    <a href="#" class="nav-item admin-only" data-page="admin" style="display:none">
+      <span class="nav-icon"><i class="fa-regular fa-file-lines"></i></span><span>Panel Admin</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-pet-mini" id="sidebar-pet-mini">
+      <!-- Se llena dinámicamente -->
+    </div>
+    <div class="user-chip">
+      <div class="user-avatar" id="nav-avatar">?</div>
+      <div class="user-info">
+        <div class="user-name" id="nav-name">—</div>
+        <div class="user-role" id="nav-role">—</div>
+      </div>
+    </div>
+    <button class="btn btn-ghost btn-sm btn-full" id="logout-btn">Salir</button>
+  </div>
+</aside>
+
+<!-- Mobile overlay -->
+<div id="overlay" class="overlay"></div>
+
+<!-- ====== MAIN ====== -->
+<div class="app-shell">
+  <!-- Topbar (mobile) -->
+  <header class="topbar">
+    <button id="menu-btn" class="icon-btn" aria-label="Abrir menú">☰</button>
+    <div class="topbar-brand">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+       </svg>
+      SmartTerra
+    </div>
+    <div id="topbar-pet" style="font-size:1.3rem"></div>
+  </header>
+
+  <!-- Pages container -->
+  <main class="page-container" id="page-container">
+
+    <!-- ===== DASHBOARD ===== -->
+    <section id="page-dashboard" class="page active">
+      <div class="page-header">
+        <div>
+          <h1 id="dash-greeting"><i class="fa-solid fa-leaf"></i> Hola</h1>
+          <p class="text-muted">Tu impacto ambiental de un vistazo</p>
+        </div>
+        <button class="btn btn-primary" data-page="registrar" data-nav>Registrar hoy</button>
+      </div>
+
+      <div class="stats-grid" id="dash-stats">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-calendar-day"></i></div>
+          <div class="stat-body">
+            <div class="stat-value" id="stat-today">—</div>
+            <div class="stat-label">kg CO₂ hoy</div>
+          </div>
+          <div class="stat-badge" id="stat-today-badge"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+          <div class="stat-body">
+            <div class="stat-value" id="stat-avg">—</div>
+            <div class="stat-label">Promedio 7 días</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-earth-americas"></i></div>
+          <div class="stat-body">
+            <div class="stat-value text-green" id="stat-saved">—</div>
+            <div class="stat-label">kg CO₂ ahorrado</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-fire"></i></div>
+          <div class="stat-body">
+            <div class="stat-value text-amber" id="stat-streak">—</div>
+            <div class="stat-label">días de racha</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <!-- Gráfico barras semanal -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Últimos 7 días</h3>
+            <span class="text-muted small">kg CO₂</span>
+          </div>
+          <div class="bar-chart-wrap" id="dash-chart">
+            <div class="chart-empty">Registra datos para ver tu progreso <i class="fa-solid fa-chart-simple"></i></div>
+          </div>
+        </div>
+
+        <!-- Panel derecho -->
+        <div class="dash-side">
+          <!-- Mascota mini dashboard -->
+          <div class="card pet-dash-card" id="dash-pet-card">
+            <div class="card-header">
+              <h3>Tu mascota</h3>
+              <a href="#" class="link-sm" data-page="mascota" data-nav>Ver más →</a>
+            </div>
+            <div class="pet-dash-inner" id="dash-pet-inner">
+              <!-- dinámico -->
+            </div>
+          </div>
+
+          <!-- Referencias -->
+          <div class="card">
+            <h3 style="margin-bottom:14px">Referencias CO₂</h3>
+            <div class="ref-list">
+              <div class="ref-item">
+                <span class="ref-dot" style="background:var(--green)"></span>
+                <span>Tu promedio</span>
+                <strong id="ref-you" class="text-green">—</strong>
+              </div>
+              <div class="ref-item">
+                <span class="ref-dot" style="background:var(--green)"></span>
+                <span>Objetivo 1.5°C</span>
+                <strong class="text-green" id="ref-target">3.8 kg</strong>
+              </div>
+              <div class="ref-item">
+                <span class="ref-dot" style="background:var(--amber)"></span>
+                <span>Promedio Colombia</span>
+                <strong class="text-amber" id="ref-colombia">5.5 kg</strong>
+              </div>
+              <div class="ref-item">
+                <span class="ref-dot" style="background:var(--red)"></span>
+                <span>Promedio mundial</span>
+                <strong class="text-red" id="ref-global">15.1 kg</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recomendaciones rápidas del último día -->
+      <div class="card" id="dash-recs" style="display:none">
+        <h3 style="margin-bottom:14px"><i class="fa-regular fa-lightbulb"></i> Recomendaciones de hoy</h3>
+        <div id="dash-recs-list"></div>
+      </div>
+
+      <div class="card cta-empty" id="dash-cta" style="display:none">
+        <div class="cta-emoji"><i class="fa-solid fa-earth-americas"></i></div>
+        <h2>¡Comienza tu viaje verde!</h2>
+        <p>Registra tu primer día de hábitos para conocer tu huella de carbono y recibir recomendaciones personalizadas.</p>
+        <button class="btn btn-primary btn-lg" data-page="registrar" data-nav>Registrar mi primer día</button>
+      </div>
+    </section>
+
+    <!-- ===== REGISTRAR ===== -->
+    <section id="page-registrar" class="page">
+      <div class="page-header">
+        <div>
+          <h1><i class="fa-solid fa-pen"></i> Registrar día</h1>
+          <p class="text-muted">Ingresa tus actividades para calcular tu huella</p>
+        </div>
+      </div>
+
+      <!-- Stepper -->
+      <div class="stepper" id="stepper">
+        <div class="step active" data-step="0"><span class="step-icon"><i class="fa-solid fa-car-side"></i></span><span class="step-label">Transporte</span></div>
+        <div class="step-line"></div>
+        <div class="step" data-step="1"><span class="step-icon"><i class="fa-solid fa-plug-circle-bolt"></i></span><span class="step-label">Energía</span></div>
+        <div class="step-line"></div>
+        <div class="step" data-step="2"><span class="step-icon"><i class="fa-solid fa-utensils"></i></span><span class="step-label">Comida</span></div>
+        <div class="step-line"></div>
+        <div class="step" data-step="3"><span class="step-icon"><i class="fa-solid fa-trash-can"></i></span><span class="step-label">Residuos</span></div>
+        <div class="step-line"></div>
+        <div class="step" data-step="4"><span class="step-icon"><i class="fa-solid fa-chart-pie"></i></span><span class="step-label">Resultado</span></div>
+      </div>
+
+      <form id="entry-form" novalidate>
+        <!-- Paso 0: Transporte -->
+        <div class="form-step active" data-step="0">
+          <!-- Carro -->
+          <div class="form-section">
+            <div class="form-section-title">
+              <i class="fa-solid fa-car"></i> Carro particular
+            </div>
+            <div class="grid-2-form">
+              <div class="field-group">
+                <label>Kilómetros recorridos</label>
+                <input type="number" name="car_km" min="0" step="0.1" placeholder="Ej: 15.5">
+                <span class="field-hint">Solo si usaste carro hoy</span>
+              </div>
+              <div class="field-group">
+                <label>Tipo de vehículo</label>
+                <select name="car_type">
+                  <option value="gasoline">Gasolina</option>
+                  <option value="diesel">Diésel</option>
+                  <option value="hybrid">Híbrido</option>
+                  <option value="electric">Eléctrico</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Motos y buses -->
+          <div class="form-section">
+            <div class="form-section-title">
+              <i class="fa-solid fa-motorcycle"></i> Motos y transporte público
+            </div>
+            <div class="grid-3-form">
+              <div class="field-group">
+                <label>Moto (km)</label>
+                <input type="number" name="moto_km" min="0" step="0.1" placeholder="0">
+              </div>
+              <div class="field-group">
+                <label>Bus urbano (km)</label>
+                <input type="number" name="bus_urban_km" min="0" step="0.1" placeholder="Ej: 12">
+              </div>
+              <div class="field-group">
+                <label>Bus intermunicipal (km)</label>
+                <input type="number" name="bus_inter_km" min="0" step="0.1" placeholder="0">
+              </div>
+            </div>
+            <div class="grid-2-form">
+              <div class="field-group">
+                <label>Metro/tren (km)</label>
+                <input type="number" name="metro_km" min="0" step="0.1" placeholder="0">
+              </div>
+              <div class="field-group">
+                <label>Mototaxi (km)</label>
+                <input type="number" name="taxi_moto_km" min="0" step="0.1" placeholder="0">
+              </div>
+            </div>
+          </div>
+
+          <!-- Bici, e-bici y vuelos -->
+          <div class="form-section">
+            <div class="form-section-title">
+              <i class="fa-solid fa-plane"></i> Bicicleta y vuelos
+            </div>
+            <div class="grid-3-form">
+              <div class="field-group">
+                <label>Bicicleta (km)</label>
+                <input type="number" name="bike_km" min="0" step="0.1" placeholder="Ej: 5">
+              </div>
+              <div class="field-group">
+                <label>Bici eléctrica (km)</label>
+                <input type="number" name="ebike_km" min="0" step="0.1" placeholder="0">
+              </div>
+              <div class="field-group">
+                <label>Vuelo nacional (km)</label>
+                <input type="number" name="flight_dom_km" min="0" step="1" placeholder="0">
+                <span class="field-hint tiny">Bogotá-Medellín: ~450 km</span>
+              </div>
+            </div>
+            <div class="grid-2-form">
+              <div class="field-group">
+                <label>Vuelo corto (km)</label>
+                <input type="number" name="flight_sh_km" min="0" step="1" placeholder="0">
+                <span class="field-hint tiny">500-1500 km</span>
+              </div>
+              <div class="field-group">
+                <label>Vuelo largo (km)</label>
+                <input type="number" name="flight_lh_km" min="0" step="1" placeholder="0">
+                <span class="field-hint tiny">>1500 km</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paso 1: Energía -->
+        <div class="form-step" data-step="1">
+          <!-- Electricidad -->
+          <div class="form-section">
+            <div class="form-section-title">
+              <i class="fa-solid fa-bolt"></i> Electricidad
+            </div>
+            <div class="grid-2-form">
+              <div class="field-group">
+                <label>Consumo (kWh)</label>
+                <input type="number" name="elec_kwh" min="0" step="0.1" placeholder="Ej: 9.5">
+                <span class="field-hint">Revisa tu medidor o factura (~10 kWh/día promedio)</span>
+              </div>
+              <div class="field-group">
+                <label>% Energía renovable</label>
+                <input type="number" name="renewable_pct" min="0" max="100" value="0" placeholder="0">
+                <span class="field-hint">Paneles solares, energía verde...</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Combustibles -->
+          <div class="form-section">
+            <div class="form-section-title">
+              <i class="fa-solid fa-fire-flame-simple"></i> Gas y leña
+            </div>
+            <div class="grid-2-form">
+              <div class="field-group">
+                <label>Gas natural (m³)</label>
+                <input type="number" name="gas_m3" min="0" step="0.1" placeholder="Ej: 1.2">
+              </div>
+              <div class="field-group">
+                <label>GLP (kg)</label>
+                <input type="number" name="glp_kg" min="0" step="0.1" placeholder="0">
+              </div>
+            </div>
+            <div class="field-group" style="max-width:280px">
+              <label>Leña (kg)</label>
+              <input type="number" name="lena_kg" min="0" step="0.1" placeholder="0">
+            </div>
+          </div>
+        </div>
+
+        <!-- Paso 2: Alimentación -->
+        <div class="form-step" data-step="2">
+          <!-- Carnes -->
+          <div class="form-section">
+            <div class="form-section-title">
+              <i class="fa-solid fa-drumstick-bite"></i> Carnes (pesar cruda)
+            </div>
+            <div class="grid-3-form">
+              <div class="field-group">
+                <label>Res (g)</label>
+                <input type="number" name="beef_g" min="0" placeholder="Ej: 150">
+              </div>
+              <div class="field-group">
+                <label>Cerdo (g)</label>
+                <input type="number" name="pork_g" min="0" placeholder="0">
+              </div>
+              <div class="field-group">
+                <label>Pollo/aves (g)</label>
+                <input type="number" name="poultry_g" min="0" placeholder="Ej: 200">
+              </div>
+            </div>
+          </div>
+
+          <!-- Pescado y huevos -->
+          <div class="form-section">
+            <div class="form-section-title">
+              <i class="fa-solid fa-fish"></i> Pescado y huevos
+            </div>
+            <div class="grid-2-form">
+              <div class="field-group">
+                <label>Pescado (g)</label>
+                <input type="number" name="fish_g" min="0" placeholder="0">
+              </div>
+              <div class="field-group">
+                <label>Huevos (g)</label>
+                <input type="number" name="eggs_g" min="0" placeholder="Ej: 120">
+              </div>
+            </div>
+          </div>
+
+          <!-- Lácteos -->
+          <div class="form-section">
+            <div class="form-section-title">
+              <i class="fa-solid fa-cheese"></i> Lácteos
+            </div>
+            <div class="grid-3-form">
+              <div class="field-group">
+                <label>Leche (ml)</label>
+                <input type="number" name="dairy_milk_g" min="0" placeholder="Ej: 300">
+              </div>
+              <div class="field-group">
+                <label>Queso (g)</label>
+                <input type="number" name="dairy_cheese_g" min="0" placeholder="0">
+              </div>
+              <div class="field-group">
+                <label>Yogurt (g)</label>
+                <input type="number" name="dairy_yogurt_g" min="0" placeholder="0">
+              </div>
+            </div>
+          </div>
+
+          <!-- Vegetales y otros -->
+          <div class="form-section">
+            <div class="form-section-title">
+              <i class="fa-solid fa-carrot"></i> Vegetales, frutas y otros
+            </div>
+            <div class="grid-3-form">
+              <div class="field-group">
+                <label>Arroz (g cocido)</label>
+                <input type="number" name="rice_g" min="0" placeholder="Ej: 250">
+              </div>
+              <div class="field-group">
+                <label>Legumbres (g)</label>
+                <input type="number" name="legumes_g" min="0" placeholder="Ej: 100">
+              </div>
+              <div class="field-group">
+                <label>Verduras (g)</label>
+                <input type="number" name="veg_g" min="0" placeholder="Ej: 300">
+              </div>
+            </div>
+            <div class="grid-2-form">
+              <div class="field-group">
+                <label>Frutas (g)</label>
+                <input type="number" name="fruits_g" min="0" placeholder="Ej: 200">
+              </div>
+              <div class="field-group">
+                <label>Procesados (g)</label>
+                <input type="number" name="proc_g" min="0" placeholder="Ej: 50">
+                <span class="field-hint tiny">Snacks, ultraprocesados...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paso 3: Residuos y agua -->
+        <div class="form-step" data-step="3">
+          <!-- Residuos -->
+          <div class="form-section">
+            <div class="form-section-title">
+              <i class="fa-solid fa-trash"></i> Residuos sólidos
+            </div>
+            <div class="grid-3-form">
+              <div class="field-group">
+                <label>Basura general (kg)</label>
+                <input type="number" name="waste_kg" min="0" step="0.01" placeholder="Ej: 0.6">
+              </div>
+              <div class="field-group">
+                <label>Reciclado (kg)</label>
+                <input type="number" name="recycled_kg" min="0" step="0.01" placeholder="Ej: 0.2">
+              </div>
+              <div class="field-group">
+                <label>Compostado (kg)</label>
+                <input type="number" name="composted_kg" min="0" step="0.01" placeholder="0">
+              </div>
+            </div>
+            <div class="field-group" style="max-width:280px">
+              <label>Quemado (kg)</label>
+              <input type="number" name="burned_kg" min="0" step="0.01" placeholder="0">
+              <span class="field-hint">Quema a cielo abierto</span>
+            </div>
+          </div>
+
+          <!-- Agua -->
+          <div class="form-section">
+            <div class="form-section-title">
+              <i class="fa-solid fa-shower"></i> Agua caliente
+            </div>
+            <div class="field-group" style="max-width:280px">
+              <label>Minutos de ducha caliente</label>
+              <input type="number" name="hot_water_min" min="0" step="1" placeholder="Ej: 10">
+              <span class="field-hint">~10 L/min en ducha promedio</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paso 4: Resultado -->
+        <div class="form-step" data-step="4" id="step-result">
+          <div id="result-achievements" style="display:none" class="achievements-banner">
+            <h3><i class="fa-solid fa-trophy"></i> ¡Nuevos logros!</h3>
+            <div id="result-achievements-list"></div>
+          </div>
+
+          <div class="result-hero">
+            <div class="result-co2" id="result-co2-value">—</div>
+            <div class="result-unit">kg CO₂eq hoy</div>
+            <div class="result-vs" id="result-vs"></div>
+          </div>
+
+          <div class="result-breakdown" id="result-breakdown">
+            <!-- Gráficos de desglose dinámicos -->
+          </div>
+
+          <div id="result-recs" style="margin-top:24px"></div>
+
+          <div id="result-error" class="alert alert-error" style="display:none"></div>
+          <div id="result-saved" class="alert alert-success" style="display:none">¡Registro guardado! Redirigiendo...</div>
+
+          <div class="step-nav" style="margin-top:24px">
+            <button type="button" class="btn btn-ghost" id="result-edit-btn">← Editar datos</button>
+            <button type="submit" class="btn btn-primary" id="result-save-btn">
+              <i class="fa-solid fa-save"></i> Guardar registro
+            </button>
+          </div>
+        </div>
+
+        <!-- Nav botones (pasos 0-3) -->
+        <div class="step-nav" id="form-nav">
+          <button type="button" class="btn btn-ghost" id="step-prev" style="visibility:hidden">
+            ← Anterior
+          </button>
+          <button type="button" class="btn btn-primary" id="step-next">
+            Siguiente →
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ===== HISTORIAL ===== -->
+    <section id="page-historial" class="page">
+      <div class="page-header">
+        <h1><i class="fa-solid fa-chart-column"></i> Historial</h1>
+      </div>
+
+      <div class="stats-grid" id="hist-stats">
+        <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-calendar-day"></i></div><div class="stat-body"><div class="stat-value" id="h-total">—</div><div class="stat-label">Registros totales</div></div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div><div class="stat-body"><div class="stat-value" id="h-avg">—</div><div class="stat-label">Promedio general</div></div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fa-brands fa-pagelines"></i></div><div class="stat-body"><div class="stat-value text-green" id="h-best">—</div><div class="stat-label">Mejor día (kg CO₂)</div></div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-triangle-exclamation"></i></div><div class="stat-body"><div class="stat-value text-red" id="h-worst">—</div><div class="stat-label">Peor día (kg CO₂)</div></div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><h3>Tendencia de CO₂</h3></div>
+        <div class="line-chart-wrap" id="hist-chart">
+          <div class="chart-empty">Sin datos aún</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Registros detallados</h3>
+          <span class="text-muted small" id="h-count">0 registros</span>
+        </div>
+        <div id="hist-list" class="entry-list"></div>
+      </div>
+    </section>
+
+    <!-- ===== MASCOTA ===== -->
+    <section id="page-mascota" class="page">
+      <div class="page-header">
+        <h1><i class="fa-solid fa-seedling"></i> Tu Mascota</h1>
+        <p class="text-muted">Evoluciona con tus logros sostenibles</p>
+      </div>
+
+      <div class="pet-page-grid">
+        <!-- Panel mascota principal -->
+        <div class="card pet-main-card">
+          <div class="pet-stage-badge" id="pet-stage-badge">— Etapa —</div>
+
+          <!-- Canvas de capas: mascota base + accesorios -->
+          <div class="pet-canvas-wrap">
+            <div class="pet-canvas" id="pet-canvas">
+              <img id="pet-base-img" class="pet-layer pet-base" src="" alt="Mascota" draggable="false">
+              <!-- Capas de accesorios (se añaden dinámicamente) -->
+            </div>
+          </div>
+
+          <!-- Nombre editable -->
+          <div class="pet-name-wrap">
+            <span id="pet-name-display" class="pet-name">—</span>
+            <button class="icon-btn-sm" id="pet-name-edit-btn" title="Renombrar"><i class="fa-solid fa-pen"></i></button>
+          </div>
+          <div class="pet-name-edit-wrap" id="pet-name-edit" style="display:none">
+            <input id="pet-name-input" type="text" maxlength="20" placeholder="Nombre de tu mascota">
+            <button class="btn btn-primary btn-sm" id="pet-name-save">✓</button>
+            <button class="btn btn-ghost btn-sm" id="pet-name-cancel">✕</button>
+          </div>
+
+          <!-- XP bar -->
+          <div class="pet-xp-wrap">
+            <div class="pet-xp-bar">
+              <div class="pet-xp-fill" id="pet-xp-fill" style="width:0%"></div>
+            </div>
+            <div class="pet-xp-label">
+              <span id="pet-xp-cur">0 XP</span>
+              <span id="pet-xp-max">— XP para evolucionar</span>
+            </div>
+          </div>
+
+          <!-- Mensaje de la mascota -->
+          <div class="pet-speech" id="pet-speech"></div>
+        </div>
+
+        <!-- Panel derecho -->
+        <div class="pet-side">
+          <!-- Stats mascota -->
+          <div class="card">
+            <h3 style="margin-bottom:14px">Estadísticas</h3>
+            <div class="pet-stats-grid">
+              <div class="pet-stat"><div class="pet-stat-val" id="ps-xp">0</div><div class="pet-stat-label">XP Total</div></div>
+              <div class="pet-stat"><div class="pet-stat-val text-amber" id="ps-streak">0</div><div class="pet-stat-label">Racha <i class="fa-solid fa-fire"></i></div></div>
+              <div class="pet-stat"><div class="pet-stat-val text-green" id="ps-saved">0</div><div class="pet-stat-label">CO₂ ahorrado</div></div>
+              <div class="pet-stat"><div class="pet-stat-val" id="ps-level">1</div><div class="pet-stat-label">Nivel</div></div>
+            </div>
+          </div>
+
+          <!-- Etapas de evolución -->
+          <div class="card">
+            <h3 style="margin-bottom:14px">Evolución</h3>
+            <div class="evolution-path" id="evolution-path"></div>
+          </div>
+
+          <!-- Accesorios (solo visible en etapa 3) -->
+          <div class="card" id="accessories-card" style="display:none">
+            <div class="card-header">
+              <h3>Accesorios</h3>
+              <span class="text-muted small">Combínalos como quieras</span>
+            </div>
+            <div class="accessories-grid" id="accessories-grid"></div>
+            <button class="btn btn-ghost btn-sm" style="margin-top:12px;width:100%" id="clear-accessories">
+              Quitar todos
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cómo ganar XP -->
+      <div class="card" style="margin-top:0">
+        <h3 style="margin-bottom:14px">¿Cómo ganar XP?</h3>
+        <div class="xp-tips">
+          <div class="xp-tip"><span class="xp-tip-icon"><i class="fa-regular fa-calendar"></i></span><span>Registrar un día: hasta <strong>75 XP</strong> según tu huella de carbono</span></div>
+          <div class="xp-tip"><span class="xp-tip-icon"><i class="fa-solid fa-fire"></i></span><span>Racha de días consecutivos: <strong>+2 XP</strong> por día (máx 50)</span></div>
+          <div class="xp-tip"><span class="xp-tip-icon"><i class="fa-solid fa-bullseye"></i></span><span>Huella bajo 4 kg CO₂: XP extra garantizado</span></div>
+          <div class="xp-tip"><span class="xp-tip-icon"><i class="fa-solid fa-trophy"></i></span><span>Desbloquear logros: de <strong>10 a 200 XP</strong></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== LOGROS ===== -->
+    <section id="page-logros" class="page">
+      <div class="page-header">
+        <h1><i class="fa-solid fa-trophy"></i> Logros</h1>
+        <p class="text-muted" id="logros-count">0 desbloqueados</p>
+      </div>
+      <div class="achievements-grid-full" id="achievements-grid"></div>
+    </section>
+
+    <!-- ===== ADMIN ===== -->
+    <section id="page-admin" class="page">
+      <div class="page-header">
+        <h1>Panel de Administración</h1>
+        <p class="text-muted">Estadísticas generales de la plataforma</p>
+      </div>
+
+      <div class="stats-grid" id="admin-stats">
+        <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-users"></i></div><div class="stat-body"><div class="stat-value" id="a-users">—</div><div class="stat-label">Usuarios registrados</div></div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fa-regular fa-file-lines"></i></div><div class="stat-body"><div class="stat-value" id="a-entries">—</div><div class="stat-label">Registros totales</div></div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-earth-americas"></i></div><div class="stat-body"><div class="stat-value text-green" id="a-avg">—</div><div class="stat-label">Promedio CO₂ plataforma</div></div></div>
+        <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-trophy"></i></div><div class="stat-body"><div class="stat-value text-amber" id="a-achievements">—</div><div class="stat-label">Logros desbloqueados</div></div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><h3>Distribución de usuarios por huella promedio</h3></div>
+        <div class="bar-chart-wrap" id="admin-dist-chart" style="height:220px">
+          <div class="chart-empty">Cargando...</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Usuarios</h3>
+          <input type="search" id="admin-search" placeholder="Buscar..." style="max-width:220px;padding:6px 12px">
+        </div>
+        <div id="admin-users-list" class="admin-users-list"></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Toast notifications -->
+<div id="toast-container" class="toast-container"></div>
+
+<script src="control/src/js/supabase-client.js"></script>
+<script src="control/src/js/carbon.js"></script>
+<script src="control/src/js/charts.js"></script>
+<script src="control/src/js/pet.js"></script>
+<script src="control/src/js/achievements.js"></script>
+<script src="control/src/js/app.js"></script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('SW registrado', reg))
+      .catch(err => console.log('SW error', err))
+  })
+}
+</script>
+</body>
+</html>

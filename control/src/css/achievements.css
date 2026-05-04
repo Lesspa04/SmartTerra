@@ -1,0 +1,213 @@
+
+/* Grid principal */
+.achievements-grid-full {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 20px;
+  padding-bottom: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header de categoría */
+.ach-category-header {
+  grid-column: 1 / -1;
+  padding: 24px 0 12px 0;
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--txt-1);
+  border-bottom: 2px solid var(--border);
+}
+
+/* Espaciador entre categorías */
+.ach-spacer {
+  height: 24px;
+}
+
+/* Tarjeta de logro */
+.ach-card {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 16px;
+  border: 2px solid var(--border);
+  background: var(--bg-card);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.ach-card:hover {
+  transform: translateY(-2px);
+}
+
+/* ESTADO DESBLOQUEADO */
+.ach-card.unlocked {
+  border-color: var(--green);
+  background: linear-gradient(135deg, 
+    var(--bg-card) 0%, 
+    rgba(52, 211, 153, 0.08) 100%
+  );
+}
+
+.ach-card.unlocked:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(52, 211, 153, 0.15);
+}
+
+/* ESTADO BLOQUEADO (GRIS) */
+.ach-card.locked {
+  opacity: 0.5;
+  filter: grayscale(1);
+}
+
+.ach-card.locked:hover {
+  opacity: 0.7;
+  filter: grayscale(0.8);
+  transform: none;
+}
+
+/* Icono del logro */
+.ach-card-icon {
+  font-size: 2.2rem;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: var(--bg-2);
+  flex-shrink: 0;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+/* Icono desbloqueado */
+.ach-card.unlocked .ach-card-icon {
+  background: linear-gradient(135deg, var(--green), #10b981);
+  color: white !important;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+}
+
+/* Icono bloqueado */
+.ach-card.locked .ach-card-icon {
+  background: var(--bg-3);
+  color: var(--txt-3) !important;
+}
+
+/* Contenido de la tarjeta */
+.ach-card-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Título del logro */
+.ach-card-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  line-height: 1.3;
+  color: var(--txt-1);
+}
+
+/* Descripción */
+.ach-card-desc {
+  color: var(--txt-2);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+/* XP y fecha */
+.ach-card-xp {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-light);
+  margin-top: 8px;
+}
+
+.ach-card.unlocked .ach-card-xp {
+  color: var(--green);
+}
+
+.ach-card.locked .ach-card-xp,
+.ach-card.locked .ach-card-name,
+.ach-card.locked .ach-card-desc {
+  color: var(--txt-3) !important;
+}
+
+/* Fecha desbloqueo */
+.ach-date {
+  font-size: 0.8rem;
+  color: var(--txt-3);
+  font-weight: 400;
+}
+
+/* Efecto glow desbloqueados */
+.ach-glow {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--green), transparent);
+  animation: achGlow 2s ease-in-out infinite;
+}
+
+@keyframes achGlow {
+  0%, 100% { opacity: 0.3; transform: scaleX(1); }
+  50% { opacity: 1; transform: scaleX(1.2); }
+}
+
+/* Contador logros */
+#logros-count {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+#logros-count strong {
+  color: var(--green);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .achievements-grid-full {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 0 16px;
+  }
+  
+  .ach-category-header {
+    padding: 20px 0 8px 0;
+    font-size: 1rem;
+  }
+  
+  .ach-card {
+    padding: 16px;
+    gap: 12px;
+  }
+  
+  .ach-card-icon {
+    width: 56px;
+    height: 56px;
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ach-card-content {
+    padding-right: 8px;
+  }
+  
+  .ach-card-xp {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
