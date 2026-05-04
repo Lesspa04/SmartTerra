@@ -4,13 +4,13 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-  // ── SUPABASE & AUTH ────────────────────────────────────── ACTIVAR DESPUES DE AJUSTAR SUPABASE
-  //const { data: { session } } = await db.auth.getSession()
-  //if (!session) { 
-  //  location.href = 'index.html'; 
-  //  return 
-  //}
-  //const user = session.user
+  // ── SUPABASE & AUTH ────────────────────────────────────── 
+    const { data: { session } } = await db.auth.getSession()
+    if (!session) { 
+      location.href = 'index.html'; 
+      return 
+    }
+  const user = session.user
 
   // ── ESTADO GLOBAL ────────────────────────────────────────
   let profile      = null
@@ -356,6 +356,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await updatePet(co2.total)
     await loadEntries()
+
+    const existingKeys = achievements.map(a => a.achievement_key)
+      const newOnes = checkAchievements(entry, petData, allEntries.length, existingKeys)
+      for (const ach of newOnes) {
+        await db.from('achievements').insert([{
+          user_id: user.id,
+          achievement_key: ach.key,
+          xp: ach.xp,
+          unlocked_at: new Date().toISOString()
+        }])
+        showToast(`🏆 ${ach.name}`, 'success')
+      }
+    await loadAchievements() 
 
     document.getElementById('result-saved').style.display = ''
     showToast('Guardado!')
