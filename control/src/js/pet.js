@@ -27,14 +27,14 @@ const PET_STAGES = [
     id:      'baby',
     name:    'Semilla',
     minXP:   1,
-    maxXP:   200,
+    maxXP:   100,
     img:     'control/public/assets/pet/stage1.png',
     speech: [
       '¡Hola! Soy una pequeña semilla. ¡Ayúdame a crecer con buenos hábitos!',
       'Cada día que cuidas el planeta, yo crezco un poco más...',
       '¡Todavía soy pequeño pero tengo mucho potencial!',
       'Toy chikito.',
-      'Me llamo semilla pero mis sueños son enormes.',
+      'Soy una semilla pero mis sueños son enormes.',
       'Estoy echando raíces. Poquito a poco.',
       'No me abandones, apenas estoy aprendiendo a existir.',
     ],
@@ -42,8 +42,8 @@ const PET_STAGES = [
   {
     id:      'growing',
     name:    'Brote',
-    minXP:   200,
-    maxXP:   600,
+    minXP:   100,
+    maxXP:   300,
     img:     'control/public/assets/pet/stage2.png',
     speech: [
       '¡Ya estoy brotando! Tus hábitos sostenibles me dan vida.',
@@ -61,7 +61,7 @@ const PET_STAGES = [
   {
     id:      'full',
     name:    'Guardián',
-    minXP:   600,
+    minXP:   300,
     maxXP:   Infinity,
     img:     'control/public/assets/pet/stage3.png',
     speech: [
