@@ -68,9 +68,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const email   = document.getElementById('reg-email').value.trim()
     const pass    = document.getElementById('reg-pass').value
     const confirm = document.getElementById('reg-confirm').value
+    const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.#_-])[A-Za-z\d@$!%*?&.#_-]{8,}$/
 
     if (!name) { showErr(errEl, 'Ingresa tu nombre'); return }
-    if (pass.length < 6) { showErr(errEl, 'Mínimo 6 caracteres en la contraseña'); return }
+    if (!strongPassword.test(pass)) {showErr(errEl,
+      'La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un símbolo.'
+    ); return }
     if (pass !== confirm) { showErr(errEl, 'Las contraseñas no coinciden'); return }
 
     setLoading(btn, true)
@@ -83,12 +86,14 @@ document.addEventListener("DOMContentLoaded", () => {
       showErr(errEl, error.message)
       setLoading(btn, false)
     } else {
-      // Marcar que es primer login para redirigir a encuesta
       sessionStorage.setItem('first_login', '1')
-      sucEl.innerHTML = '¡Cuenta creada! Revisa tu email para confirmar tu cuenta y luego inicia sesión.'
+      sucEl.innerHTML = '¡Cuenta creada correctamente!'
       sucEl.style.display = 'block'
-      regForm.reset()
-      setLoading(btn, false)
+
+      // Redirigir automáticamente
+      setTimeout(() => {
+        location.href = '/app.html'
+      }, 1500)
     }
   })
 

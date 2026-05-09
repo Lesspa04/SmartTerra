@@ -75,12 +75,15 @@
         </div>
         <div class="grid-2-form">
           <div class="field-group">
-            <label for="reg-pass">Contraseña</label>
-            <input id="reg-pass" type="password" placeholder="Mín. 6 chars" autocomplete="new-password" required>
-          </div>
+          <label for="reg-pass">Contraseña</label>
+          <div class="input-eye-wrap">
+              <input id="reg-pass" type="password" placeholder="Pon una contraseña segura" autocomplete="new-password" required> 
+                <button type="button" class="eye-btn" data-target="reg-pass">👁</button>
+            </div>
+        </div>
           <div class="field-group">
             <label for="reg-confirm">Confirmar</label>
-            <input id="reg-confirm" type="password" placeholder="Repetir" autocomplete="new-password" required>
+            <input id="reg-confirm" type="password" placeholder="Repite la contraseña" autocomplete="new-password" required>
           </div>
         </div>
         <button type="submit" class="btn btn-primary btn-full" id="register-btn">

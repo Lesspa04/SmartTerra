@@ -42,3 +42,24 @@
 .auth-form.active{display:flex}
 
 .auth-footer{text-align:center;color:var(--txt-3);font-size:.83rem}
+
+.input-eye-wrap{
+  position:relative;
+  display:flex;
+  align-items:center;
+}
+
+.input-eye-wrap input{
+  width:100%;
+  padding-right:44px;
+}
+
+.eye-btn{
+  position:absolute;
+  right:12px;
+  background:none;
+  border:none;
+  cursor:pointer;
+  font-size:16px;
+  color:var(--txt-3);
+}
